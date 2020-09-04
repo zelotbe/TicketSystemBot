@@ -1,21 +1,26 @@
 const Discord = require("discord.js");
 const color = require('../colors.json');
 module.exports.run = async (bot, message, args) => {
-
-    let msg = await message.channel.send("Robots are handling your request...");
-
+    let tickets = message.guild.channels.cache.find(c => c.name == "tickets" && c.type == "text");
+    if(!tickets){
+      message.channel.send("The ticket channel is missing, please provide a 'Tickets' channel.");
+    }else{
+      let msg = await message.channel.send("Robots are handling your request...");
     let ticketembed = new Discord.MessageEmbed()
     .setColor(color.geel)
     .setTitle("Ticket creation")
     .addField('Hi there!', 'In order to get support, react with the following emoji :tickets:.', true)
     .setTimestamp()
     .setFooter("Ticket System", bot.user.displayAvatarURL());
-    message.channel.send({embed: ticketembed}).then(ticketembed => {ticketembed.react("🎟️");this.messageId = message.id;});
+    tickets.send({embed: ticketembed}).then(ticketembed => {ticketembed.react("🎟️");this.messageId = message.id;});
+    message.channel.send("Your ticket panel has been created at #tickets .");
     msg.delete();
+  }
     bot.on("messageReactionAdd", async(reaction, user) => {
       if(user.bot) return;
         if(reaction.emoji.name === "🎟️"){
-          let category = message.guild.channels.cache.find(c => c.name == "Open-Tickets" && c.type == "category")
+          let tickets = message.guild.channels.cache.find(c => c.name == "Tickets" && c.type == "text");
+          let category = message.guild.channels.cache.find(c => c.name == "Open-Tickets" && c.type == "category");
           if(!category){
           message.guild.channels.create('Open-Tickets', {
           type: 'category',
@@ -25,7 +30,7 @@ module.exports.run = async (bot, message, args) => {
             allow: ['SEND_MESSAGES']
           }]
         }).then(console.log("Category created"));
-      }
+      }else{
           let name = `ticket-numberherelater`;
             message.guild.channels.create(name, {
             type: "text",
@@ -46,9 +51,8 @@ module.exports.run = async (bot, message, args) => {
               if (category && channel) channel.setParent(category.id);
 else console.error(`One of the channels is missing:\nCategory: ${!!category}\nChannel: ${!!channel}`);
           });
-
+}
         }
-
     });
 };
 
