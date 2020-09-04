@@ -6,15 +6,31 @@ module.exports.run = async (bot, message, args) => {
 	let argst = messageArray.slice(1);
 	let com = command.toLowerCase();
   let ment = message.mentions.users.first();
+  function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
 	if(!ment) {
-			message.channel.send('Please mention a user!')
+    let avatar = message.author.avatarURL();
+    let user1embed = new Discord.MessageEmbed()
+    .setDescription("Gebruikersinformatie")
+    .setColor(`${getRandomColor()}`)
+    .setThumbnail(avatar)
+    .addField("Username", message.member, true)
+    .addField("User ID", message.member.id, true)
+    .addField("Status", message.member.presence.status, true);
+    return message.channel.send(user1embed);
 		}
   let avatar = ment.avatarURL();
   var game = ment.presence.game;
 
   let userembed = new Discord.MessageEmbed()
   .setTitle("User information")
-  .setColor("#f44242")
+  .setColor(`${getRandomColor()}`)
   .setThumbnail(avatar)
   .addField("Username", ment.tag, true)
   .addField("User ID", ment.id, true)
