@@ -49,7 +49,21 @@ module.exports.run = async (bot, message, args) => {
               console.log("Channel creation");
               channel = message.guild.channels.cache.find(c => c.name == "ticket-numberherelater" && c.type == "text");
               if (category && channel) channel.setParent(category.id);
-else console.error(`One of the channels is missing:\nCategory: ${!!category}\nChannel: ${!!channel}`);
+              else console.error(`One of the channels is missing:\nCategory: ${!!category}\nChannel: ${!!channel}`);
+              let ticketCreationEmbed = new Discord.MessageEmbed()
+              .setColor(color.blue)
+              .setTitle("Hi there!")
+              .addField('Please choose a category in order to get the correct help.','\u200B')
+              .addField("💥 = Crash  👨‍💻 = Server problem  💿 = Others", '\u200B')
+              .setFooter("Ticket System", bot.user.displayAvatarURL());
+              chan.send({embed: ticketCreationEmbed}).then(ticketCreationEmbed => {ticketCreationEmbed.react("💥").then(() => ticketCreationEmbed.react('👨‍💻')).then(() => ticketCreationEmbed.react('💿'));});
+              if(reaction.emoji.name === "💥"){
+                message.channel.send("It's a crash! :o");
+              }else if(reaction.emoji.name === "‍👨‍💻‍"){
+                message.channel.send("It's a server problem! :o");
+              }else if(reaction.emoji.name === "‍💿‍"){
+                message.channel.send("It's an other problem! :o");
+              }
           });
 }
         }
