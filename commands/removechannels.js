@@ -8,7 +8,7 @@ message.channel.send(`You don't have access to this command!`)
        .then(message.guild.channels.cache.forEach(channel => channel.delete()));
        console.log("All channels are removed.");
 }
- }
+};
 
    exports.help = {
      name: 'delchan',
